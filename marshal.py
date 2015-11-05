@@ -152,7 +152,7 @@ def test(mimetype):
     m = Test()
     pprint.pprint(m.__dict__)
     e = marshal_object(m, mimetype)
-    print e
+    print(e)
     d = unmarshal_object(e, mimetype, Test)
     pprint.pprint(d.__dict__)
 
