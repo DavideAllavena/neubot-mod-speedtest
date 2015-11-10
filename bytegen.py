@@ -24,12 +24,12 @@
 
 import getopt
 import sys
-from ..runtime.third_party import six
+
 if __name__ == '__main__':
     sys.path.insert(0, '.')
 
-from ..globals import RANDOM_BLOCKS
-from ..runtime import utils
+from ..utils.utils_random import RANDOMBLOCKS
+from .. import utils
 
 PIECE_LEN = 262144
 
@@ -43,7 +43,7 @@ class BytegenSpeedtest(object):
         self.closed = False
         self.piece_len = piece_len
 
-    def read(self, count=six.MAXSIZE):
+    def read(self, count=sys.maxint):
         ''' Read count bytes '''
 
         if self.closed:
@@ -53,7 +53,7 @@ class BytegenSpeedtest(object):
 
         diff = utils.ticks() - self.ticks
         if diff < self.seconds:
-            data = RANDOM_BLOCKS.get_block()[:self.piece_len]
+            data = RANDOMBLOCKS.get_block()[:self.piece_len]
             length = '%x\r\n' % self.piece_len
             vector = [ length, data, '\r\n' ]
         else:

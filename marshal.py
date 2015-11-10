@@ -31,8 +31,8 @@ import cgi
 if __name__ == "__main__":
     sys.path.insert(0, ".")
 
-from ..XXX import unicodize
-from ..XXX import stringify
+from ..utils import unicodize
+from ..utils import stringify
 
 # Marshal
 
@@ -152,7 +152,7 @@ def test(mimetype):
     m = Test()
     pprint.pprint(m.__dict__)
     e = marshal_object(m, mimetype)
-    print(e)
+    print e
     d = unmarshal_object(e, mimetype, Test)
     pprint.pprint(d.__dict__)
 
