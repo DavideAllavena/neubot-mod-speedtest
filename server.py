@@ -22,15 +22,16 @@
 
 ''' Speedtest server '''
 
-from ..utils.utils_random import RandomBody
-from ..lib_http.message import Message
-from ..lib_http.server import ServerHTTP
+from ..runtime.random_body import RandomBody
+from ..runtime.http_message import HttpMessage
+from ..runtime.http_server import HttpServer
 
 from .bytegen import BytegenSpeedtest
 
+from ..globals import RANDOMBLOCKS
 TARGET = 5
 
-class SpeedtestServer(ServerHTTP):
+class SpeedtestServer(HttpServer):
 
     ''' Server-side of the speedtest test '''
 
@@ -66,7 +67,7 @@ class SpeedtestServer(ServerHTTP):
 
         # Just ignore the incoming body
         if request.uri in ('/speedtest/latency', '/speedtest/upload'):
-            response = Message()
+            response = HttpMessage()
             response.compose(code='200', reason='Ok')
             stream.send_response(request, response)
 
@@ -79,7 +80,7 @@ class SpeedtestServer(ServerHTTP):
             #
             if not request['range']:
                 body = BytegenSpeedtest(TARGET)
-                response = Message()
+                response = HttpMessage()
                 response.compose(code='200', reason='Ok',
                   mimetype='application/octet-stream',
                   chunked=body)
@@ -88,9 +89,9 @@ class SpeedtestServer(ServerHTTP):
 
             # Honour range
             first, last = self._parse_range(request)
-            response = Message()
+            response = HttpMessage()
             response.compose(code='200', reason='Ok',
-              body=RandomBody(last - first + 1),
+              body=RandomBody(RANDOMBLOCKS, last - first + 1),
               mimetype='application/octet-stream')
             stream.send_response(request, response)
 

@@ -24,8 +24,12 @@
 """ The entry point of the Speedtest module """
 
 import logging
-from ..lib_net.poller import POLLER
-from .. import mod_speedtest
+from ..runtime.poller import POLLER
+from . import wrapper
+from .negotiate_server_speedtest import NEGOTIATE_SERVER_SPEEDTEST
+from ..negotiate_server import NEGOTIATE_SERVER
+
+
 def _run_test(message):
     """ Run the Speedtest test """
     raise RuntimeError("Not implemented")
@@ -35,13 +39,16 @@ def mod_load(context, message):
     logging.debug("speedtest: init for context '%s'... in progress", context)
 
     if context == "server":
-
         negotiate_server = message["negotiate_server"]
         http_server = message["http_server"]
 
         logging.debug("speedtest: register negotiate server module... in progress")
+        NEGOTIATE_SERVER.register_module('speedtest', NEGOTIATE_SERVER_SPEEDTEST)
+        logging.debug("speedtest: register negotiate server module... complete")
 
         conf = message["configuration"]
-        mod_speedtest.wrapper.run(POLLER, conf)
+        wrapper.run(POLLER, conf)
 
+    else:
+        logging.warning("dash: unknown context: %s", context)
     logging.debug("speedtest: init for context '%s'... complete", context)
